@@ -1,6 +1,7 @@
 package com.BrassAmber.ba_bt.structures;
 
 import net.minecraft.tags.ITag;
+import net.minecraft.world.server.ChunkHolder;
 import org.apache.logging.log4j.Level;
 
 import com.BrassAmber.ba_bt.BTJigsawManager;
@@ -178,6 +179,7 @@ public class LandBattleTower extends Structure<NoFeatureConfig> {
 
         // if there are more flat areas than not flat areas and no water return true 
         return t > 3 && noWater;
+
     }
 
     public static class Start extends StructureStart<NoFeatureConfig> {

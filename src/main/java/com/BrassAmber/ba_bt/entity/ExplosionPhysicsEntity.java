@@ -7,10 +7,13 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.item.FallingBlockEntity;
 import net.minecraft.entity.item.TNTEntity;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 
 public class ExplosionPhysicsEntity extends TNTEntity {
 
@@ -36,13 +39,13 @@ public class ExplosionPhysicsEntity extends TNTEntity {
 					double vx = pos.getX() - vo.x;
 					double vz = pos.getZ() - vo.z;
 					final Vector3d velocity = new Vector3d(vx / Math.abs(vx) * 0.5D, 0.5D, vz / Math.abs(vz) * 0.5D);
-					
+
 					this.level.removeBlock(pos, true);
-					
+
 					FallingBlockEntity fallingBlock = new FallingBlockEntity(
-							this.level, 
-							pos.getX() + 0.5F, 
-							pos.getY(), 
+							this.level,
+							pos.getX() + 0.5F,
+							pos.getY(),
 							pos.getZ() + 0.5F,
 							state
 					) {
@@ -58,18 +61,22 @@ public class ExplosionPhysicsEntity extends TNTEntity {
 					fallingBlock.setInvulnerable(true);
 					fallingBlock.dropItem = false;
 					fallingBlock.setDeltaMovement(velocity);
-					
+
 					physicObjects.add(fallingBlock);
+
+					this.level.levelEvent(Constants.WorldEvents.SPAWN_EXPLOSION_PARTICLE, pos, 0);
+					this.level.playSound(null, pos, SoundEvents.GENERIC_EXPLODE, SoundCategory.BLOCKS,
+							2.0F, 1.0F);
 				}
 			}
 			expl.clearToBlow();
-			
-			physicObjects.forEach((fb) -> 
-				this.level.addFreshEntity(fb)
+
+			physicObjects.forEach((fb) ->
+					this.level.addFreshEntity(fb)
 			);
-			
+
 			expl.finalizeExplosion(true);
-			
+
 			this.remove();
 		}
 	}
@@ -80,7 +87,7 @@ public class ExplosionPhysicsEntity extends TNTEntity {
 	}
 	
 	protected Explosion explosion() {
-		Explosion explosion = new Explosion(this.level, null, null, null, this.getX(), this.getY(0.0625D), this.getZ(), 4.0F, false, Explosion.Mode.BREAK);
+		Explosion explosion = new Explosion(this.level, null, null, null, this.getX(), this.getY(0.0625D), this.getZ(), 4.0F, false, Explosion.Mode.DESTROY);
 		return explosion;
 	}
 	

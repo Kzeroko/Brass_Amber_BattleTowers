@@ -169,7 +169,7 @@ public class DestroyTowerEntity extends Entity {
                     this.getNextRow();
                 } else {
                    // BrassAmberBattleTowers.LOGGER.log(Level.DEBUG, "Removing row");
-                    if(this.random.nextDouble() <= 0.125 && this.removeBlock != null) {
+                    if (this.random.nextDouble() <= 0.125 && this.removeBlock != null) {
                     	//Fancy physics stuff
                     	ExplosionPhysicsEntity explosion = new ExplosionPhysicsEntity(BTEntityTypes.PHYSICS_EXPLOSION, this.level);
                     	explosion.setPos(this.removeBlock.getX(), this.removeBlock.getY(), this.removeBlock.getZ());
@@ -193,13 +193,14 @@ public class DestroyTowerEntity extends Entity {
                             this.level.setBlock(this.removeBlock, Blocks.AIR.defaultBlockState(), BlockFlags.DEFAULT);
 
                         }
-                        if (i == 20) {
-                    		this.level.levelEvent(Constants.WorldEvents.SPAWN_EXPLOSION_PARTICLE, this.removeBlock, 0);
-                            this.level.playSound(null, this.removeBlock,
-                                    SoundEvents.GENERIC_EXPLODE, SoundCategory.BLOCKS,3.0F,
-                                    1.0F);
-                        }
 
+
+                    }
+                    if (this.currentTicks % 6 == 0) {
+                        this.level.levelEvent(Constants.WorldEvents.SPAWN_EXPLOSION_PARTICLE, this.removeBlock, 0);
+                        this.level.playSound(null, this.removeBlock,
+                                SoundEvents.GENERIC_EXPLODE, SoundCategory.BLOCKS,2.0F,
+                                1.0F);
                     }
 
                 }
@@ -310,7 +311,7 @@ public class DestroyTowerEntity extends Entity {
         this.golemType = GolemType.getTypeForName(compound.getString("GolemType"));
         this.setGolemDead(true);
         this.initialized = false;
-        this.currentTicks = 350;
+        this.currentTicks = 390;
     }
 
 
